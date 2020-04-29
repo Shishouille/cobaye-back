@@ -9,16 +9,13 @@ const router = express.Router();
 router.get(
   '/criterias',
   isAuth,
-  [
-    body('name')
-    .trim()
-    .isLength({ min: 5 }),
-    body('status')
-      .trim()
-      .not()
-      .isEmpty()
-  ],
   critController.getCriterias
+);
+
+router.get(
+  '/criterias',
+  isAuth,
+  critController.getGeneralCriterias
 );
 
 router.post(
