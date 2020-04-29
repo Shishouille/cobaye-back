@@ -10,20 +10,37 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  name: {
+  birthday: {
+    type: Date,
+    required: true
+  },
+  firstName: {
     type: String,
     required: true
   },
-  status: {
+  lastName: {
     type: String,
-    default: 'I am new!'
+    required: true
   },
-  // posts: [
-  //   {
-  //     type: Schema.Types.ObjectId,
-  //     ref: 'Post'
-  //   }
-  // ]
+  gender: {
+    type: String,
+    required: true
+  },
+  nsc: {
+    type: Schema.Types.ObjectId,
+    ref: 'NSC'
+  },
+  role:
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Role'
+    },
+  experiences: [
+      {
+      type: Schema.Types.ObjectId,
+      ref: 'Experience'
+    }
+  ],
 });
 
 module.exports = mongoose.model('User', userSchema);
