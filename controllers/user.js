@@ -5,6 +5,35 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Role = require('../models/role');
 
+const NSC = require('../models/nsc');
+const Profession = require('../models/profession');
+const Domain = require('../models/domain');
+const University = require('../models/university');
+
+exports.getInfos = async (req, res, next) => {
+  try {
+    const NSC = await NSC.find();
+    const Profession = await Profession.find();
+    const Domain = await Domain.find();
+    const University = await University.find();
+    const Role = await Role.find();
+    res.status(200).json({
+      message: 'Fetched Infos successfully.',
+      NSC,
+      Profession,
+      Domain,
+      University,
+      Role,
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+
 exports.signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -14,16 +43,32 @@ exports.signup = async (req, res, next) => {
     throw error;
   }
   const {
-    nickname,
+    firstname,
+    lastname,
     email,
-    password
+    password,
+    birthday,
+    gender,
+    nsc,
+    profession,
+    domain,
+    university,
+    role,
   } = req.body;
   try {
     const hashedPw = await bcrypt.hash(password, 12);
     const user = new User({
-      email: email,
+      firstname,
+      lastname,
+      email,
       password: hashedPw,
-      name: name
+      birthday,
+      gender,
+      nsc,
+      profession,
+      domain,
+      university,
+      role,
     });
     const result = await user.save();
     res.status(201).json({ message: 'User created!', userId: result._id });
@@ -59,7 +104,7 @@ exports.login = async (req, res, next) => {
         userId: loadedUser._id.toString()
       },
       'somesupersecretsecret',
-      { expiresIn: '1h' }
+      { expiresIn: '10h' }
     );
     res.status(200).json({ token: token, userId: loadedUser._id.toString() });
   } catch (err) {
@@ -70,6 +115,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
+// TODO: A voir si utile
 exports.getUserRole = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
@@ -85,6 +131,23 @@ exports.getUserRole = async (req, res, next) => {
       throw error;
     }
     res.status(200).json({ role: role.name });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+exports.getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      const error = new Error('User not found.');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ user: user });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

@@ -30,6 +30,18 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'NSC'
   },
+  profession: {
+    type: Schema.Types.ObjectId,
+    ref: 'Profession'
+  },
+  domain: {
+    type: Schema.Types.ObjectId,
+    ref: 'Domain'
+  },
+  university: {
+    type: Schema.Types.ObjectId,
+    ref: 'University'
+  },
   role:
     {
       type: Schema.Types.ObjectId,

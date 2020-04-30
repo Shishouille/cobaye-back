@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator/check');
 
 const Experience = require('../models/Experience');
 const User = require('../models/user');
+const Criteria = require('../models/criteria');
 
 exports.getExperiences = async (req, res, next) => {
   try {
@@ -12,7 +13,57 @@ exports.getExperiences = async (req, res, next) => {
     res.status(200).json({
       message: 'Fetched Experiences successfully.',
       Experiences: Experiences,
-      totalItems: totalItems
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+exports.getGeneralCriterias = async (req, res, next) => {
+  const criterias = await Criteria.find({isCreatedByUser: false})
+  try {
+    if (!criterias) {
+      const error = new Error('Could not find Criterias.');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ message: 'Criterias fetched.', criterias });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+exports.getPassationTypes = async (req, res, next) => {
+  const passationTypes = await Passation.find()
+  try {
+    if (!passationTypes) {
+      const error = new Error('Could not find Criterias.');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ message: 'Passationtypes fetched.', passationTypes });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+// TODO: WIP !
+exports.filterExperience = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    const Experiences = await Experience.find().populate('criteria');
+    res.status(200).json({
+      message: 'Fetched Experiences successfully.',
+      Experiences: Experiences,
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -72,8 +123,8 @@ exports.createExperience = async (req, res, next) => {
 };
 
 exports.getExperience = async (req, res, next) => {
-  const ExperienceId = req.params.ExperienceId;
-  const Experience = await Experience.findById(ExperienceId);
+  const ExperienceId = req.params.expId;
+  const Experience = await Experience.findById(ExperienceId)
   try {
     if (!Experience) {
       const error = new Error('Could not find Experience.');
@@ -90,7 +141,7 @@ exports.getExperience = async (req, res, next) => {
 };
 
 exports.updateExperience = async (req, res, next) => {
-  const ExperienceId = req.params.ExperienceId;
+  const ExperienceId = req.params.expId;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed, entered data is incorrect.');
@@ -142,7 +193,7 @@ exports.updateExperience = async (req, res, next) => {
 };
 
 exports.deleteExperience = async (req, res, next) => {
-  const ExperienceId = req.params.ExperienceId;
+  const ExperienceId = req.params.expId;
   try {
     const Experience = await Experience.findById(ExperienceId);
 
@@ -171,9 +222,4 @@ exports.deleteExperience = async (req, res, next) => {
     }
     next(err);
   }
-};
-
-const clearImage = filePath => {
-  filePath = path.join(__dirname, '..', filePath);
-  fs.unlink(filePath, err => console.log(err));
 };

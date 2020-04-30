@@ -2,7 +2,7 @@ const express = require('express');
 const { body } = require('express-validator/check');
 
 const User = require('../models/user');
-const authController = require('../controllers/authentification');
+const authController = require('../controllers/user');
 const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
@@ -33,26 +33,32 @@ router.put(
 );
 
 router.get(
-  '/nsc',
-  authController.getNSC
+  '/infos',
+  authController.getInfos
 );
 
-router.get(
-  '/roles',
-  authController.getRoles
-);
+// router.get(
+//   '/nsc',
+//   authController.getNSC
+// );
 
-router.get(
-  '/universities',
-  authController.getUniversities
-);
+// router.get(
+//   '/roles',
+//   authController.getRoles
+// );
 
-router.get(
-  '/profession',
-  authController.getProfessions
-);
+// router.get(
+//   '/universities',
+//   authController.getUniversities
+// );
+
+// router.get(
+//   '/profession',
+//   authController.getProfessions
+// );
 
 router.post('/login', authController.login);
+router.get('/:userId', authController.getUser);
 
 router.get('/status', isAuth, authController.getUserRole);
 

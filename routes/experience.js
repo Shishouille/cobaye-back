@@ -11,6 +11,8 @@ router.get('/experiences', isAuth, experienceController.getExperiences);
 
 router.get('/experience/:expId', isAuth, experienceController.getExperience);
 
+router.get('/experience/filter/:userId', isAuth, experienceController.filterExperience);
+
 router.get('/passations', isAuth, experienceController.getPassations);
 
 // POST
@@ -55,7 +57,7 @@ router.post(
 );
 
 router.post(
-  '/experience/participate',
+  '/experience/:expId/participate',
   isAuth,
   [
     body('participants')
@@ -105,5 +107,17 @@ router.put(
 );
 
 router.delete('/experience/:expId', isAuth, experienceController.deleteExperience);
+
+router.get(
+  '/criterias',
+  isAuth,
+  experienceController.getCriterias
+);
+
+router.get(
+  '/criterias',
+  isAuth,
+  experienceController.getGeneralCriterias
+);
 
 module.exports = router;
