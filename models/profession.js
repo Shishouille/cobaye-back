@@ -6,6 +6,10 @@ const professionSchema = new Schema({
     type: String,
     required: true
   },
+  category: {
+    type: Number,
+    required: true
+  },
 });
 
 module.exports = mongoose.model('Profession', professionSchema);

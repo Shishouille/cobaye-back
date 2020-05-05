@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const universitySchema = new Schema({
   name: {
     type: String,
     required: true
   },
-  ville: {
+  campus: {
+    type: String,
+    required: true
+  },
+  city: {
     type: String,
     required: true
   },
@@ -16,9 +20,9 @@ const userSchema = new Schema({
   },
   postal: {
     type: String,
-    default: 'I am new!'
+    required: true,
   },
-  scientist: [
+  scientists: [
     {
       type: Schema.Types.ObjectId,
       ref: 'User'
@@ -26,4 +30,4 @@ const userSchema = new Schema({
   ]
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('University', universitySchema);

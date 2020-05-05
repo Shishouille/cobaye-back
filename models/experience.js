@@ -20,6 +20,15 @@ const experienceSchema = new Schema({
       type: String,
     }
   }],
+  created_at:
+  {
+    type: Date,
+    default: new Date()
+  },
+  updated_at:
+  {
+    type: Date,
+  },
   description: {
     type: String,
     required: true

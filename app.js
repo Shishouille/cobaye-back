@@ -1,39 +1,19 @@
 // .env
 require('dotenv').config();
 
-const path = require('path');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const multer = require('multer');
+const cors = require('cors');
 
 // Controllers Routes
 // const XRoutes = require('./routes/X');
+const userRoutes = require('./routes/user');
+// const expRoutes = require('./routes/experience');
+const criteriaRoutes = require('./routes/criteria');
+
 
 const app = express();
-
-// Multer - For Files
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + '-' + file.originalname);
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === 'image/png' ||
-    file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg'
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
 
 const whitelist = ['http://localhost:8080'];
 const corsOptions = {
@@ -48,10 +28,6 @@ const corsOptions = {
 
 app.use(bodyParser.json()); // application/json
 app.use(cors(corsOptions)); // application/json
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
-);
-app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -65,6 +41,9 @@ app.use((req, res, next) => {
 
 // Routes Controllers
 // app.use('/X', XRoutes);
+// app.use('/experiences', expRoutes);
+app.use('/users', userRoutes);
+app.use(criteriaRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -78,9 +57,11 @@ mongoose
   .connect(
     process.env.URI, {
       useNewUrlParser: true,
+      useUnifiedTopology: true
     }
   )
   .then(result => {
     app.listen(3000);
+    console.log('Connected')
   })
   .catch(err => console.log(err));

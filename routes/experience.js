@@ -1,23 +1,23 @@
 const express = require('express');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 
 const experienceController = require('../controllers/experience');
-const isAuth = require('../middleware/is-auth');
+const isAuth = require('../middlewares/is-auth');
 
 const router = express.Router();
 
 // GET
-router.get('/experiences', isAuth, experienceController.getExperiences);
+router.get('/', isAuth, experienceController.getExperiences);
 
-router.get('/experience/:expId', isAuth, experienceController.getExperience);
+router.get('/:expId', isAuth, experienceController.getExperience);
 
-router.get('/experience/filter/:userId', isAuth, experienceController.filterExperience);
+router.get('/filter/:userId', isAuth, experienceController.filterExperience);
 
 router.get('/passations', isAuth, experienceController.getPassations);
 
 // POST
 router.post(
-  '/experience',
+  '/',
   isAuth,
   [
     body('name')
@@ -39,7 +39,7 @@ router.post(
       .isLength({ min: 5 }),
       body('questionnaryLink')
       .trim()
-      .isLength({ min: 5 }),
+      .isURL(),
     body('time')
       .trim()
       .isLength({ min: 5 }),
@@ -57,7 +57,7 @@ router.post(
 );
 
 router.post(
-  '/experience/:expId/participate',
+  '/:expId/participate',
   isAuth,
   [
     body('participants')
@@ -65,6 +65,8 @@ router.post(
   ],
   experienceController.addParticipants
 );
+
+// PUT
 
 router.put(
   '/experience/:expId',
@@ -106,18 +108,8 @@ router.put(
   experienceController.updatePost
 );
 
-router.delete('/experience/:expId', isAuth, experienceController.deleteExperience);
+// DELETE
 
-router.get(
-  '/criterias',
-  isAuth,
-  experienceController.getCriterias
-);
-
-router.get(
-  '/criterias',
-  isAuth,
-  experienceController.getGeneralCriterias
-);
+router.delete('/:expId', isAuth, experienceController.deleteExperience);
 
 module.exports = router;

@@ -12,4 +12,4 @@ const domainSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('Criteria', domainSchema);
+module.exports = mongoose.model('Domain', domainSchema);

@@ -22,6 +22,15 @@ const dateSchema = new Schema({
       ref: 'User'
     }
   ],
+  created_at:
+  {
+    type: Date,
+    default: new Date()
+  },
+  updated_at:
+  {
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model('Date', dateSchema);

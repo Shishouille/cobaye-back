@@ -1,4 +1,4 @@
-const { validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -43,8 +43,8 @@ exports.signup = async (req, res, next) => {
     throw error;
   }
   const {
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     email,
     password,
     birthday,
@@ -58,8 +58,8 @@ exports.signup = async (req, res, next) => {
   try {
     const hashedPw = await bcrypt.hash(password, 12);
     const user = new User({
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       email,
       password: hashedPw,
       birthday,
@@ -80,7 +80,7 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+exports.signin = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   let loadedUser;
@@ -142,12 +142,18 @@ exports.getUserRole = async (req, res, next) => {
 exports.getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
+    const role = await Role.findById(user.role);
     if (!user) {
       const error = new Error('User not found.');
       error.statusCode = 404;
       throw error;
     }
-    res.status(200).json({ user: user });
+    if (!role) {
+      const error = new Error('Role not found.');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ user: {...user, role } });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

@@ -1,36 +1,108 @@
 const express = require('express');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 
 const critController = require('../controllers/criteria');
-const isAuth = require('../middleware/is-auth');
+const isAuth = require('../middlewares/is-auth');
 
 const router = express.Router();
 
-router.get(
-  '/criterias',
-  isAuth,
-  critController.getCriterias
-);
+// GET
+// router.get('/criterias', critController.getCriterias);
+// router.get('/general/criterias', critController.getGeneralCriterias);
+router.get('/all/signup', critController.getAllSignup);
+// router.get('/domains', critController.getDomains);
+// router.get('/nscs', critController.getNSCs);
+// router.get('/passations', critController.getPassations);
+// router.get('/roles', critController.getRoles);
+// router.get('/professions', critController.getProfessions);
+// router.get('/gender', critController.getGenders);
 
-router.get(
-  '/criterias',
-  isAuth,
-  critController.getGeneralCriterias
+
+
+// POST
+router.post(
+  '/criteria',
+  [
+    body('name')
+    .trim(),
+  ],
+  critController.createCriteria
 );
 
 router.post(
-  '/criterias',
-  isAuth,
+  '/domain',
   [
     body('name')
-    .trim()
-    .isLength({ min: 5 }),
-    body('status')
-      .trim()
-      .not()
-      .isEmpty()
+    .trim(),
   ],
-  critController.createCriteria
+  critController.createDomain
+);
+
+router.post(
+  '/nsc',
+  [
+    body('name')
+      .trim(),
+    body('level')
+      .isInt(),
+  ],
+  critController.createNSC
+);
+
+
+router.post(
+  '/passation',
+  [
+    body('name')
+    .trim(),
+  ],
+  critController.createPassation
+);
+
+router.post(
+  '/role',
+  [
+    body('name')
+    .trim(),
+  ],
+  critController.createRole
+);
+
+router.post(
+  '/profession',
+  [
+    body('name')
+    .trim(),
+    body('category')
+    .isInt(),
+  ],
+  critController.createProfession
+);
+
+router.post(
+  '/gender',
+  [
+    body('name')
+    .trim(),
+  ],
+  critController.createGender
+);
+
+router.post(
+  '/university',
+  [
+    body('name')
+    .trim(),
+    body('campus')
+    .trim(),
+    body('city')
+    .trim(),
+    body('adress')
+    .trim(),
+    body('postal')
+    .isInt({max: 5})
+  ],
+  critController.createUniversity
 );
 
 

@@ -1,18 +1,17 @@
-const fs = require('fs');
-const path = require('path');
+const { validationResult } = require('express-validator');
 
-const { validationResult } = require('express-validator/check');
-
-const Experience = require('../models/Experience');
+const Experience = require('../models/experience');
 const User = require('../models/user');
 const Criteria = require('../models/criteria');
 
+// CRUD - R
+
 exports.getExperiences = async (req, res, next) => {
   try {
-    const Experiences = await Experience.find();
+    const experiences = await Experience.find();
     res.status(200).json({
       message: 'Fetched Experiences successfully.',
-      Experiences: Experiences,
+      experiences,
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -22,32 +21,17 @@ exports.getExperiences = async (req, res, next) => {
   }
 };
 
-exports.getGeneralCriterias = async (req, res, next) => {
-  const criterias = await Criteria.find({isCreatedByUser: false})
-  try {
-    if (!criterias) {
-      const error = new Error('Could not find Criterias.');
-      error.statusCode = 404;
-      throw error;
-    }
-    res.status(200).json({ message: 'Criterias fetched.', criterias });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  }
-};
 
-exports.getPassationTypes = async (req, res, next) => {
-  const passationTypes = await Passation.find()
+exports.getExperience = async (req, res, next) => {
+  const ExperienceId = req.params.expId;
+  const Experience = await Experience.findById(ExperienceId)
   try {
-    if (!passationTypes) {
-      const error = new Error('Could not find Criterias.');
+    if (!Experience) {
+      const error = new Error('Could not find Experience.');
       error.statusCode = 404;
       throw error;
     }
-    res.status(200).json({ message: 'Passationtypes fetched.', passationTypes });
+    res.status(200).json({ message: 'Experience fetched.', Experience: Experience });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -57,7 +41,7 @@ exports.getPassationTypes = async (req, res, next) => {
 };
 
 // TODO: WIP !
-exports.filterExperience = async (req, res, next) => {
+exports.filterExperiences = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
     const Experiences = await Experience.find().populate('criteria');
@@ -72,6 +56,8 @@ exports.filterExperience = async (req, res, next) => {
     next(err);
   }
 };
+
+// CRUD - C
 
 exports.createExperience = async (req, res, next) => {
   const errors = validationResult(req);
@@ -105,7 +91,7 @@ exports.createExperience = async (req, res, next) => {
     toDate,
   });
   try {
-    await Experience.save();
+    await experience.save();
     const user = await User.findById(req.userId);
     user.experiences.push(Experience);
     await user.save();
@@ -122,26 +108,9 @@ exports.createExperience = async (req, res, next) => {
   }
 };
 
-exports.getExperience = async (req, res, next) => {
-  const ExperienceId = req.params.expId;
-  const Experience = await Experience.findById(ExperienceId)
-  try {
-    if (!Experience) {
-      const error = new Error('Could not find Experience.');
-      error.statusCode = 404;
-      throw error;
-    }
-    res.status(200).json({ message: 'Experience fetched.', Experience: Experience });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  }
-};
-
+// CRUD - U
 exports.updateExperience = async (req, res, next) => {
-  const ExperienceId = req.params.expId;
+  const expId = req.params.expId;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed, entered data is incorrect.');
@@ -159,31 +128,31 @@ exports.updateExperience = async (req, res, next) => {
   const fromDate = req.body.fromDate;
   const toDate = req.body.toDate;
   try {
-    const Experience = await Experience.findById(ExperienceId);
-    if (!Experience) {
+    const experience = await Experience.findById(expId);
+    if (!experience) {
       const error = new Error('Could not find Experience.');
       error.statusCode = 404;
       throw error;
     }
-    if (Experience.creator.toString() !== req.userId) {
+    if (experience.creator.toString() !== req.userId) {
       const error = new Error('Not authorized!');
       error.statusCode = 403;
       throw error;
     }
     
-    Experience.name = name;
-    Experience.creator = req.userId;
-    Experience.description = description;
-    Experience.tags = tags;
-    Experience.criterias = criterias;
-    Experience.passation = passation;
-    Experience.questionnaryLink = questionnaryLink;
-    Experience.time = time;
-    Experience.steps = steps;
-    Experience.fromDate = fromDate;
-    Experience.toDate = toDate;
-    const result = await Experience.save();
-    res.status(200).json({ message: 'Experience updated!', Experience: result });
+    experience.name = name;
+    experience.creator = req.userId;
+    experience.description = description;
+    experience.tags = tags;
+    experience.criterias = criterias;
+    experience.passation = passation;
+    experience.questionnaryLink = questionnaryLink;
+    experience.time = time;
+    experience.steps = steps;
+    experience.fromDate = fromDate;
+    experience.toDate = toDate;
+    const result = await experience.save();
+    res.status(200).json({ message: 'Experience updated!', experience: result });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -192,6 +161,7 @@ exports.updateExperience = async (req, res, next) => {
   }
 };
 
+// CRUD - D
 exports.deleteExperience = async (req, res, next) => {
   const ExperienceId = req.params.expId;
   try {

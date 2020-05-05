@@ -47,6 +47,16 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Role'
     },
+  created_at:
+    {
+      type: Date,
+      default: new Date(),
+      required: true,
+    },
+  updated_at:
+    {
+      type: Date,
+    },
   experiences: [
       {
       type: Schema.Types.ObjectId,

@@ -4,17 +4,19 @@ const Schema = mongoose.Schema;
 const criteriaSchema = new Schema({
   name: {
     type: String,
-    required: true
-  },
-  status: {
-    type: Boolean,
-    required: true,
-    default: false,
   },
   isCreatedByUser: {
     type: Boolean,
-    required: true,
     default: true,
+  },
+  created_at:
+  {
+    type: Date,
+    default: new Date()
+  },
+  updated_at:
+  {
+    type: Date,
   },
 });
 

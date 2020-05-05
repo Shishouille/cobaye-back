@@ -6,6 +6,10 @@ const NSCSchema = new Schema({
     type: String,
     required: true
   },
+  level: {
+    type: Number,
+    required: true
+  }
 });
 
 module.exports = mongoose.model('NSC', NSCSchema);

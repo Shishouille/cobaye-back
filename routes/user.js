@@ -1,12 +1,24 @@
 const express = require('express');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 
 const User = require('../models/user');
 const authController = require('../controllers/user');
-const isAuth = require('../middleware/is-auth');
+const isAuth = require('../middlewares/is-auth');
 
 const router = express.Router();
 
+// GET
+router.get('/:userId', isAuth, authController.getUser);
+
+// router.get('/status', isAuth, authController.getUserRole);
+
+// router.get(
+//   '/dates',
+//   isAuth,
+//   authController.getDates
+// );
+
+// PUT
 router.put(
   '/signup',
   [
@@ -23,51 +35,23 @@ router.put(
       .normalizeEmail(),
     body('password')
       .trim()
-      .isLength({ min: 5 }),
-    body('name')
+      .isLength({ min: 6 }),
+    body('firstName')
       .trim()
+      .not()
+      .isEmpty(),
+    body('lastName')
+      .trim()
+      .not()
+      .isEmpty(),
+    body('birthday')
       .not()
       .isEmpty()
   ],
   authController.signup
 );
 
-router.get(
-  '/infos',
-  authController.getInfos
-);
-
-// router.get(
-//   '/nsc',
-//   authController.getNSC
-// );
-
-// router.get(
-//   '/roles',
-//   authController.getRoles
-// );
-
-// router.get(
-//   '/universities',
-//   authController.getUniversities
-// );
-
-// router.get(
-//   '/profession',
-//   authController.getProfessions
-// );
-
-router.post('/login', authController.login);
-router.get('/:userId', authController.getUser);
-
-router.get('/status', isAuth, authController.getUserRole);
-
-router.get(
-  '/dates',
-  isAuth,
-  authController.getDates
-);
-
-
+// POST 
+router.post('/signin', authController.signin);
 
 module.exports = router;
