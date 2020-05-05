@@ -50,6 +50,9 @@ const experienceSchema = new Schema({
       value: {
         type: Number,
       },
+      date: {
+        type: Date,
+      },
       category: {
         type: Number,
         default: 0,

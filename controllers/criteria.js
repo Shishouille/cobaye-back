@@ -50,7 +50,7 @@ exports.getPassationTypes = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    res.status(200).json({ message: 'Passation types fetched.', passationTypes });
+    res.status(200).json({ passationTypes });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -67,7 +67,7 @@ exports.getGeneralCriterias = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    res.status(200).json({ message: 'Criterias fetched.', criterias });
+    res.status(200).json({ criterias });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
