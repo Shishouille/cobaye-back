@@ -5,9 +5,9 @@ const criteriaSchema = new Schema({
   name: {
     type: String,
   },
-  isCreatedByUser: {
-    type: Boolean,
-    default: true,
+  category: {
+    type: Number,
+    default: 0,
   },
   created_at:
   {
@@ -17,6 +17,7 @@ const criteriaSchema = new Schema({
   updated_at:
   {
     type: Date,
+    default: new Date()
   },
 });
 

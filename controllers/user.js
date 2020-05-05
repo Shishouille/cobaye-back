@@ -71,6 +71,11 @@ exports.signup = async (req, res, next) => {
       role,
     });
     const result = await user.save();
+    if (result.role._id === '5eaffbbdc47d4e6edf0467d4') {
+      const university = await University.findById(result.university);
+      university.scientists.push(result);
+      await university.save();      
+    }
     res.status(201).json({ message: 'User created!', userId: result._id });
   } catch (err) {
     if (!err.statusCode) {

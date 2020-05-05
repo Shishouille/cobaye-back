@@ -60,7 +60,7 @@ exports.getPassationTypes = async (req, res, next) => {
 };
 
 exports.getGeneralCriterias = async (req, res, next) => {
-  const criterias = await Criteria.find({ isCreatedByUser: false})
+  const criterias = await Criteria.find({category: { $gte: 1} });
   try {
     if (!criterias) {
       const error = new Error('Could not find Criterias.');
@@ -88,10 +88,10 @@ exports.createCriteria = async (req, res, next) => {
   }
 
   const name = req.body.name;
-  const status = false;
+  const category = req.body.category;
   const criteria = new Criteria({
     name,
-    status,
+    category,
   });
   try {
     await criteria.save();

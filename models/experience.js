@@ -20,6 +20,10 @@ const experienceSchema = new Schema({
       type: String,
     }
   }],
+  minParticipants: {
+    type: Number,
+    default: 1,
+  },
   created_at:
   {
     type: Date,
@@ -28,6 +32,7 @@ const experienceSchema = new Schema({
   updated_at:
   {
     type: Date,
+    default: new Date()
   },
   description: {
     type: String,
@@ -36,10 +41,31 @@ const experienceSchema = new Schema({
   tags: {
     type: Array,
   },
-  criterias: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Criteria'
-  }],
+  criterias: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      value: {
+        type: Number,
+      },
+      category: {
+        type: Number,
+        default: 0,
+      },
+      created_at:
+      {
+        type: Date,
+        default: new Date()
+      },
+      updated_at:
+      {
+        type: Date,
+        default: new Date()
+      },
+    }
+],
   passation: {
     type: Schema.Types.ObjectId,
     ref: 'Passation'
@@ -54,6 +80,11 @@ const experienceSchema = new Schema({
   steps: {
     type: Number,
     required: true
+  },
+  remuneration: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
   fromDate: {
     type: Date,

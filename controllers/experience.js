@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 
 const Experience = require('../models/experience');
+const Passation = require('../models/experience');
 const User = require('../models/user');
 const Criteria = require('../models/criteria');
 
@@ -41,10 +42,10 @@ exports.getExperience = async (req, res, next) => {
 };
 
 // TODO: WIP !
-exports.filterExperiences = async (req, res, next) => {
+exports.filterExperience = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
-    const Experiences = await Experience.find().populate('criteria');
+    const Experiences = await Experience.find();
     res.status(200).json({
       message: 'Fetched Experiences successfully.',
       Experiences: Experiences,
@@ -73,6 +74,7 @@ exports.createExperience = async (req, res, next) => {
   const criterias = req.body.criterias;
   const passation = req.body.passation;
   const questionnaryLink = req.body.questionnaryLink;
+  const minParticipants = req.body.minParticipants;
   const time = req.body.time;
   const steps = req.body.steps;
   const fromDate = req.body.fromDate;
@@ -85,6 +87,7 @@ exports.createExperience = async (req, res, next) => {
     criterias,
     passation,
     questionnaryLink,
+    minParticipants,
     time,
     steps,
     fromDate,
@@ -99,6 +102,36 @@ exports.createExperience = async (req, res, next) => {
       message: 'Experience created successfully!',
       Experience: Experience,
       creator: { _id: user._id, name: user.name }
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+// TODO: WIP !
+exports.addParticipants = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error('Validation failed, entered data is incorrect.');
+    error.statusCode = 422;
+    throw error;
+  }
+  const expId = req.params.expId;
+  const experience = await Experience.findById(expId);
+
+  const motive = req.body.motive;
+
+  const participation = {
+    motive,
+    user: req.params.userId,
+  };
+  try {
+    experience.participants.push(participation);
+    res.status(201).json({
+      message: 'Participation OK',
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -125,6 +158,7 @@ exports.updateExperience = async (req, res, next) => {
   const questionnaryLink = req.body.questionnaryLink;
   const time = req.body.time;
   const steps = req.body.steps;
+  const remuneration = req.body.remuneration;
   const fromDate = req.body.fromDate;
   const toDate = req.body.toDate;
   try {
@@ -148,6 +182,7 @@ exports.updateExperience = async (req, res, next) => {
     experience.passation = passation;
     experience.questionnaryLink = questionnaryLink;
     experience.time = time;
+    experience.remuneration = remuneration;
     experience.steps = steps;
     experience.fromDate = fromDate;
     experience.toDate = toDate;

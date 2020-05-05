@@ -8,11 +8,11 @@ const router = express.Router();
 
 // GET
 // router.get('/criterias', critController.getCriterias);
-// router.get('/general/criterias', critController.getGeneralCriterias);
+router.get('/general/criterias', critController.getGeneralCriterias);
 router.get('/all/signup', critController.getAllSignup);
 // router.get('/domains', critController.getDomains);
 // router.get('/nscs', critController.getNSCs);
-// router.get('/passations', critController.getPassations);
+router.get('/passations', critController.getPassationTypes);
 // router.get('/roles', critController.getRoles);
 // router.get('/professions', critController.getProfessions);
 // router.get('/gender', critController.getGenders);

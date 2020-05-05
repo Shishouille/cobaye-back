@@ -30,6 +30,7 @@ const dateSchema = new Schema({
   updated_at:
   {
     type: Date,
+    default: new Date()
   },
 });
 

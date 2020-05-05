@@ -13,8 +13,6 @@ router.get('/:expId', isAuth, experienceController.getExperience);
 
 router.get('/filter/:userId', isAuth, experienceController.filterExperience);
 
-router.get('/passations', isAuth, experienceController.getPassations);
-
 // POST
 router.post(
   '/',
@@ -57,7 +55,7 @@ router.post(
 );
 
 router.post(
-  '/:expId/participate',
+  '/:userId/:expId/participate',
   isAuth,
   [
     body('participants')
@@ -105,7 +103,7 @@ router.put(
       .trim()
       .isLength({ min: 5 })
   ],
-  experienceController.updatePost
+  experienceController.updateExperience
 );
 
 // DELETE

@@ -9,7 +9,7 @@ const cors = require('cors');
 // Controllers Routes
 // const XRoutes = require('./routes/X');
 const userRoutes = require('./routes/user');
-// const expRoutes = require('./routes/experience');
+const expRoutes = require('./routes/experience');
 const criteriaRoutes = require('./routes/criteria');
 
 
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 
 // Routes Controllers
 // app.use('/X', XRoutes);
-// app.use('/experiences', expRoutes);
+app.use('/experiences', expRoutes);
 app.use('/users', userRoutes);
 app.use(criteriaRoutes);
 
