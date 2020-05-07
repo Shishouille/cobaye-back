@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const experienceSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
   creator: {
     type: Schema.Types.ObjectId,
@@ -20,23 +21,11 @@ const experienceSchema = new Schema({
       type: Date,
       required: true,
     },
-    motive: {
-      type: String,
-    }
+    motive: String,
   }],
   minParticipants: {
     type: Number,
     default: 1,
-  },
-  created_at:
-  {
-    type: Date,
-    default: new Date()
-  },
-  updated_at:
-  {
-    type: Date,
-    default: new Date()
   },
   description: {
     type: String,
@@ -55,9 +44,7 @@ const experienceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Passation'
   },
-  questionnaryLink: {
-    type: String
-  },
+  questionnaryLink: String,
   time: {
     type: String,
     required: true
@@ -68,16 +55,15 @@ const experienceSchema = new Schema({
   },
   remuneration: {
     type: Boolean,
-    required: true,
     default: false,
   },
-  fromDate: {
+  start: {
     type: Date,
     required: true
   },
-  toDate: {
+  end: {
     type: Date,
-  }
-});
+  },  
+}, { timestamps: true }),;
 
 module.exports = mongoose.model('Experience', experienceSchema);

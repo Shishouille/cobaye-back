@@ -47,16 +47,6 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Role'
     },
-  created_at:
-    {
-      type: Date,
-      default: new Date(),
-      required: true,
-    },
-  updated_at:
-    {
-      type: Date,
-    },
   experiences: [
     {
       experience: {
@@ -67,8 +57,8 @@ const userSchema = new Schema({
         type: Date,
         required: true,
       }
-    }
+    },
   ],
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

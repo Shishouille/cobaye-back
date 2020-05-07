@@ -16,16 +16,6 @@ const criteriaSchema = new Schema({
     type: Number,
     default: 0,
   },
-  created_at:
-  {
-    type: Date,
-    default: new Date()
-  },
-  updated_at:
-  {
-    type: Date,
-    default: new Date()
-  },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Criteria', criteriaSchema);
