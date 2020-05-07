@@ -44,11 +44,12 @@ exports.getExperience = async (req, res, next) => {
 // TODO: WIP !
 exports.filterExperience = async (req, res, next) => {
   try {
-    const user = await User.findById(req.userId);
-    const Experiences = await Experience.find();
+    // const user = await User.findById(req.userId);
+    const criterias = await Experience.populate('criterias').find();
+
     res.status(200).json({
       message: 'Fetched Experiences successfully.',
-      Experiences: Experiences,
+      criterias,
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -77,18 +78,47 @@ exports.createExperience = async (req, res, next) => {
   const minParticipants = req.body.minParticipants;
   const time = req.body.time;
   const steps = req.body.steps;
+  const remuneration = req.body.remuneration;
   const fromDate = req.body.fromDate;
   const toDate = req.body.toDate;
+
+  // Split criterias to find the new ones
+  const newCriterias = criterias.filter((criteria) => criteria.category === 0);
+  const generalCriterias = criterias.filter((criteria) => criteria.category !== 0);
+
+  // Add them to the database
+  if (newCriterias) {
+     newCriterias.forEach(async (criteria) => {
+      const newCriteria = new Criteria({
+      name: criteria.name,
+    });
+    try {
+      await newCriteria.save();
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    }   
+  // Find their ids
+    const returnCriteria = await Criteria.find({name: criteria.name});
+    return addedCriterias = [...returnCriteria._id];
+    })
+  }
+
+  const fullCriterias = [generalCriterias, addedCriterias];
+
   const Experience = new Experience({
     name,
     creator: req.userId,
     description,
     tags,
-    criterias,
+    criterias: fullCriterias,
     passation,
     questionnaryLink,
     minParticipants,
     time,
+    remuneration,
     steps,
     fromDate,
     toDate,
@@ -111,7 +141,6 @@ exports.createExperience = async (req, res, next) => {
   }
 };
 
-// TODO: WIP !
 exports.addParticipants = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -120,16 +149,23 @@ exports.addParticipants = async (req, res, next) => {
     throw error;
   }
   const expId = req.params.expId;
+  const userId = req.params.userId;
+
   const experience = await Experience.findById(expId);
+  const user = await User.findById(userId);
 
   const motive = req.body.motive;
-
-  const participation = {
-    motive,
-    user: req.params.userId,
-  };
+  const date = req.body.date;
   try {
-    experience.participants.push(participation);
+    experience.participants.push({
+      motive,
+      date,
+      user: userId,
+    });
+    user.experiences.push({
+      date,
+      experience: expId,
+    })
     res.status(201).json({
       message: 'Participation OK',
     });

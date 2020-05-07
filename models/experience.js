@@ -16,6 +16,10 @@ const experienceSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'User'      
     },
+    date: {
+      type: Date,
+      required: true,
+    },
     motive: {
       type: String,
     }
@@ -43,32 +47,10 @@ const experienceSchema = new Schema({
   },
   criterias: [
     {
-      name: {
-        type: String,
-        required: true,
-      },
-      value: {
-        type: Number,
-      },
-      date: {
-        type: Date,
-      },
-      category: {
-        type: Number,
-        default: 0,
-      },
-      created_at:
-      {
-        type: Date,
-        default: new Date()
-      },
-      updated_at:
-      {
-        type: Date,
-        default: new Date()
-      },
+      type: Schema.Types.ObjectId,
+      ref: 'Criteria'
     }
-],
+  ],
   passation: {
     type: Schema.Types.ObjectId,
     ref: 'Passation'
@@ -77,7 +59,7 @@ const experienceSchema = new Schema({
     type: String
   },
   time: {
-    type: Number,
+    type: String,
     required: true
   },
   steps: {

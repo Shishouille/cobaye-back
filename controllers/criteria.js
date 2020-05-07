@@ -50,7 +50,7 @@ exports.getPassationTypes = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    res.status(200).json({ passationTypes });
+    res.status(200).json(passationTypes);
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -67,7 +67,7 @@ exports.getGeneralCriterias = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    res.status(200).json({ criterias });
+    res.status(200).json(criterias);
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -89,9 +89,13 @@ exports.createCriteria = async (req, res, next) => {
 
   const name = req.body.name;
   const category = req.body.category;
+  const minAge = req.body.minAge;
+  const maxAge = req.body.maxAge;
   const criteria = new Criteria({
     name,
     category,
+    minAge,
+    maxAge,
   });
   try {
     await criteria.save();

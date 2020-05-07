@@ -11,7 +11,8 @@ router.get('/', isAuth, experienceController.getExperiences);
 
 router.get('/:expId', isAuth, experienceController.getExperience);
 
-router.get('/filter/:userId', isAuth, experienceController.filterExperience);
+// router.get('/filter/:userId', isAuth, experienceController.filterExperience);
+router.get('/filter', experienceController.filterExperience);
 
 // POST
 router.post(

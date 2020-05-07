@@ -58,9 +58,15 @@ const userSchema = new Schema({
       type: Date,
     },
   experiences: [
-      {
-      type: Schema.Types.ObjectId,
-      ref: 'Experience'
+    {
+      experience: {
+        type: Schema.Types.ObjectId,
+        ref: 'Experience'
+      },
+      date: {
+        type: Date,
+        required: true,
+      }
     }
   ],
 });
