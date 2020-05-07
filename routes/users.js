@@ -1,31 +1,21 @@
-const express = require('express');
-const { body } = require('express-validator');
+import express from 'express';
+import validator from 'express-validator';
 
-const User = require('../models/user');
-const authController = require('../controllers/user');
-const isAuth = require('../middlewares/is-auth');
+import User from '../models/User.js';
+import { get, signup, signin } from '../controllers/users.js';
+import isAuth from'../middlewares/is-auth.js';
 
+const { body } = validator;
 const router = express.Router();
 
-// GET
-router.get('/:userId', isAuth, authController.getUser);
-
-// router.get('/status', isAuth, authController.getUserRole);
-
-// router.get(
-//   '/dates',
-//   isAuth,
-//   authController.getDates
-// );
-
-// PUT
-router.put(
+router.get('/:id', isAuth, get);
+router.post(
   '/signup',
   [
     body('email')
       .isEmail()
       .withMessage('Please enter a valid email.')
-      .custom((value, { req }) => {
+      .custom((value) => {
         return User.findOne({ email: value }).then(userDoc => {
           if (userDoc) {
             return Promise.reject('E-Mail address already exists!');
@@ -48,10 +38,9 @@ router.put(
       .not()
       .isEmpty()
   ],
-  authController.signup
+  signup
 );
 
-// POST 
-router.post('/signin', authController.signin);
+router.post('/signin', signin);
 
-module.exports = router;
+export default router;

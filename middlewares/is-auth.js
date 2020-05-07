@@ -1,24 +1,20 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+import HttpError from '../config/HttpError.js';
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   const authHeader = req.get('Authorization');
   if (!authHeader) {
-    const error = new Error('Not authenticated.');
-    error.statusCode = 401;
-    throw error;
+    throw new HttpError(400, 'Not authenticated.');
   }
-  const token = authHeader.split(' ')[1];
+  const [,token] = authHeader.split(' ');
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, 'somesupersecretsecret');
   } catch (err) {
-    err.statusCode = 500;
-    throw err;
+    throw new HttpError(500);
   }
   if (!decodedToken) {
-    const error = new Error('Not authenticated.');
-    error.statusCode = 401;
-    throw error;
+    throw new HttpError(400, 'Not authenticated.');
   }
   req.userId = decodedToken.userId;
   next();

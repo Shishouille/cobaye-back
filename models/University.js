@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema, model } = mongoose;
 
 const universitySchema = new Schema({
   name: {
@@ -14,20 +15,14 @@ const universitySchema = new Schema({
     type: String,
     required: true
   },
-  adress: {
+  address: {
     type: String,
     required: true
   },
-  postal: {
+  zipCode: {
     type: String,
     required: true,
   },
-  scientists: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    },
-  ]
 });
 
-module.exports = mongoose.model('University', universitySchema);
+export default model('University', universitySchema);

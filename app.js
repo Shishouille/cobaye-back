@@ -1,67 +1,23 @@
-// .env
-require('dotenv').config();
+import express from 'express';
+import bodyParser from 'body-parser';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
-// Controllers Routes
-// const XRoutes = require('./routes/X');
-const userRoutes = require('./routes/user');
-const expRoutes = require('./routes/experience');
-const criteriaRoutes = require('./routes/criteria');
-
+import { corsMiddleware, headersMiddleware } from './middlewares/http-policies.js';
+import errorsMiddleware from './middlewares/errors.js';
+import routes from './routes/index.js';
 
 const app = express();
 
-const whitelist = ['http://localhost:8080'];
-const corsOptions = {
-    origin: (origin, callback) => {
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    }
-};
-
+// Prefer to define middlewares in separate files for cleaner code
 app.use(bodyParser.json()); // application/json
-app.use(cors(corsOptions)); // application/json
+app.use(corsMiddleware()); // application/json
+app.use(headersMiddleware);
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-  );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+// Routes
+routes.forEach(({ prefix, routes }) => {
+  app.use(prefix, routes);
+})
 
-// Routes Controllers
-// app.use('/X', XRoutes);
-app.use('/experiences', expRoutes);
-app.use('/users', userRoutes);
-app.use(criteriaRoutes);
+app.use(errorsMiddleware);
 
-app.use((error, req, res, next) => {
-  console.log(error);
-  const status = error.statusCode || 500;
-  const message = error.message;
-  const data = error.data;
-  res.status(status).json({ message: message, data: data });
-});
-
-mongoose
-  .connect(
-    process.env.URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
-  )
-  .then(result => {
-    app.listen(3000);
-    console.log('Connected')
-  })
-  .catch(err => console.log(err));
+// It's cleaner to separate app logic to server logic
+export default app;
