@@ -1,0 +1,10 @@
+{
+  "parser": "babel-eslint", // ES6++ parser
+  "env": { "node": true }, // specify your env, could add mocha or jest if you add some tests
+  "extends": "airbnb-base", // Like in React, good set of rules
+  "rules": {
+    "no-underscore-dangle": ["error", { "allow": ["_id", "__v"] }], // to prevent errors from mongo/mongoose syntax
+    "max-len": ["error", { "code": 120 }], // Only for cleaner code
+    "semi": "error"
+  }
+}

@@ -1,12 +1,13 @@
+// @todo not sure this is a good pattern, to discuss
 const { validationResult } = require('express-validator');
 
-const Criteria = require('../models/criteria');
-const Domain = require('../models/domain');
-const Role = require('../models/role');
-const NSC = require('../models/nsc');
-const Passation = require('../models/passation');
-const Profession = require('../models/profession');
-const University = require('../models/university');
+const Criterias = require('../models/Criteria');
+const Domain = require('../models/Domain');
+const Role = require('../models/Role');
+const NSC = require('../models/Nsc');
+const Passation = require('../models/Passation');
+const Profession = require('../models/Profession');
+const University = require('../models/University');
 const Gender = require('../models/gender');
 
 // CRUD - R
@@ -25,7 +26,7 @@ exports.getAllSignup = async (req, res, next) => {
       throw error;
     }
     res.status(200).json(
-    { 
+    {
       domains,
       nscs,
       roles,
@@ -60,7 +61,7 @@ exports.getPassationTypes = async (req, res, next) => {
 };
 
 exports.getGeneralCriterias = async (req, res, next) => {
-  const criterias = await Criteria.find({category: { $gte: 1} });
+  const criterias = await Criterias.find({category: { $gte: 1} });
   try {
     if (!criterias) {
       const error = new Error('Could not find Criterias.');
@@ -77,7 +78,7 @@ exports.getGeneralCriterias = async (req, res, next) => {
 };
 
 
-// CRUD - C 
+// CRUD - C
 
 exports.createCriteria = async (req, res, next) => {
   const errors = validationResult(req);
@@ -91,7 +92,7 @@ exports.createCriteria = async (req, res, next) => {
   const category = req.body.category;
   const minAge = req.body.minAge;
   const maxAge = req.body.maxAge;
-  const criteria = new Criteria({
+  const criteria = new Criterias({
     name,
     category,
     minAge,
@@ -100,7 +101,7 @@ exports.createCriteria = async (req, res, next) => {
   try {
     await criteria.save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       criteria,
     });
   } catch (err) {
@@ -129,7 +130,7 @@ exports.createDomain = async (req, res, next) => {
   try {
     await domain.save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       criteria,
     });
   } catch (err) {
@@ -157,7 +158,7 @@ exports.createNSC = async (req, res, next) => {
   try {
     await nsc.save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       nsc,
     });
   } catch (err) {
@@ -184,7 +185,7 @@ exports.createPassation = async (req, res, next) => {
   try {
     await passation.save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       passation,
     });
   } catch (err) {
@@ -210,7 +211,7 @@ exports.createRole = async (req, res, next) => {
   try {
     await role.populate('test').save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       role,
     });
   } catch (err) {
@@ -236,7 +237,7 @@ exports.createGender = async (req, res, next) => {
   try {
     await gender.save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       gender,
     });
   } catch (err) {
@@ -271,7 +272,7 @@ exports.createUniversity = async (req, res, next) => {
   try {
     await university.save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       university,
     });
   } catch (err) {
@@ -300,7 +301,7 @@ exports.createProfession = async (req, res, next) => {
   try {
     await profession.save();
     res.status(201).json({
-      message: 'Criteria created successfully!',
+      message: 'Criterias created successfully!',
       profession,
     });
   } catch (err) {

@@ -1,20 +1,16 @@
-const express = require('express');
-const { body } = require('express-validator');
+import express from 'express';
+import validator from 'express-validator';
 
-const experienceController = require('../controllers/experience');
-const isAuth = require('../middlewares/is-auth');
+import { list, get, create, update, remove } from '../controllers/experiences.js';
+import isAuth from '../middlewares/is-auth.js';
 
+const { body } = validator;
 const router = express.Router();
 
-// GET
-router.get('/', isAuth, experienceController.getExperiences);
+router.get('/', isAuth, list);
+router.get('/:id', isAuth, get);
+// router.get('/filter', experienceController.filterExperience);
 
-router.get('/:expId', isAuth, experienceController.getExperience);
-
-// router.get('/filter/:userId', isAuth, experienceController.filterExperience);
-router.get('/filter', experienceController.filterExperience);
-
-// POST
 router.post(
   '/',
   isAuth,
@@ -52,23 +48,21 @@ router.post(
       .trim()
       .isLength({ min: 5 })
   ],
-  experienceController.createExperience
+  create
 );
 
-router.post(
-  '/:userId/:expId/participate',
-  isAuth,
-  [
-    body('participants')
-      .trim(),
-  ],
-  experienceController.addParticipants
-);
+// router.post(
+//   '/:userId/:expId/participate',
+//   isAuth,
+//   [
+//     body('participants')
+//       .trim(),
+//   ],
+//   experienceController.addParticipants
+// );
 
-// PUT
-
-router.put(
-  '/experience/:expId',
+router.patch(
+  '/:id',
   isAuth,
   [
     body('name')
@@ -104,11 +98,9 @@ router.put(
       .trim()
       .isLength({ min: 5 })
   ],
-  experienceController.updateExperience
+  update
 );
 
-// DELETE
+router.delete('/:id', isAuth, remove);
 
-router.delete('/:expId', isAuth, experienceController.deleteExperience);
-
-module.exports = router;
+export default router;

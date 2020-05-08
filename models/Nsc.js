@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema, model } = mongoose;
 
 const NSCSchema = new Schema({
   name: {
@@ -10,6 +11,6 @@ const NSCSchema = new Schema({
     type: Number,
     required: true
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('NSC', NSCSchema);
+export default model('NSC', NSCSchema);
